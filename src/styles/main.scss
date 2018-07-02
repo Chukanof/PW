@@ -1,0 +1,42 @@
+@import "../../node_modules/normalize.css/normalize.css";
+@import "./components/reactTable.scss";
+/*
+        
+          ______   __    __  _______          ______    ______   _______   ________ 
+         /      \ |  \  |  \|       \        /      \  /      \ |       \ |        \
+        |  $$$$$$\| $$  | $$| $$$$$$$\      |  $$$$$$\|  $$$$$$\| $$$$$$$\| $$$$$$$$
+        | $$  | $$| $$  | $$| $$__| $$      | $$   \$$| $$  | $$| $$  | $$| $$__    
+        | $$  | $$| $$  | $$| $$    $$      | $$      | $$  | $$| $$  | $$| $$  \   
+        | $$  | $$| $$  | $$| $$$$$$$\      | $$   __ | $$  | $$| $$  | $$| $$$$$   
+        | $$__/ $$| $$__/ $$| $$  | $$      | $$__/  \| $$__/ $$| $$__/ $$| $$_____ 
+         \$$    $$ \$$    $$| $$  | $$       \$$    $$ \$$    $$| $$    $$| $$     \
+          \$$$$$$   \$$$$$$  \$$   \$$        \$$$$$$   \$$$$$$  \$$$$$$$  \$$$$$$$$
+                                                                       
+ */  
+
+ *,
+ *:before,
+ *:after {
+   box-sizing: inherit; }
+ 
+ html {
+   height: 100%;
+//    font-size: 62.5%;
+   box-sizing: border-box; }
+ 
+ body {
+   position: relative;
+   height: 100%;
+   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+   // without explicit resetting of this properties on mobile devices (iphone) 
+   //page will shows with margins from the browser frame
+   left: 0;
+   top: 0;
+   /* back to default browser size */
+//    font-size: 1.6rem; 
+}
+
+#root{
+    height: 100%;
+}
