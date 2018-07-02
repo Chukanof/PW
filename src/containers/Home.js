@@ -9,6 +9,9 @@ import DrawerMenu from "../components/DrawerMenu";
 import Header from "../components/Header";
 import ContentProvider from "../components/ContentProvider";
 import ResponsiveAppLayout from "../components/ResponsiveAppLayout";
+import layoutTypesEnum from "../constants/layoutTypes";
+
+import { debounce } from "throttle-debounce";
 
 const menuItems = [
   { tag: "trHistory", title: "History", icon: "grid_on" },
@@ -53,31 +56,48 @@ class Home extends React.Component {
   };
 
   setSelectedMenu = tag => {
+    console.log(`home set menu ${tag}`);
     this.setState({ selectedMenu: tag });
   };
 
   changeLayoutType = type => {
+    console.log(`${type}`);
     this.setState({ layoutType: type });
   };
 
-  getDrawerMenu = items => {
-    return (
-      <DrawerMenu
-        items={items}
-        setSelectedCallback={this.setSelectedMenu}
-        selectedItem={this.state.selectedMenu}
-      />
-    );
+  handleResize = () => {
+    console.log(`${window.innerWidth}`);
+    if (window.innerWidth < 600) {
+      this.setState({ layoutType: layoutTypesEnum.small });
+    } else if (window.innerWidth >= 600 && window.innerWidth < 1280) {
+      this.setState({ layoutType: layoutTypesEnum.medium });
+    } else if (window.innerWidth >= 1280) {
+      this.setState({ layoutType: layoutTypesEnum.large });
+    }
   };
+
+  componentDidMount() {
+    window.addEventListener(
+      "resize",
+      debounce(200, false, this.handleResize),
+      true
+    );
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  }
+
   render() {
     const { classes, theme } = this.props;
-    const drawerMenu = this.getDrawerMenu(menuItems);
 
     return (
       <div className={classes.root}>
         <ResponsiveAppLayout
-          menuItems={drawerMenu}
+          menuArray={menuItems}
           changeLayoutTypeCallback={this.changeLayoutType}
+          selectedMenu={this.state.selectedMenu}
+          selectedMenuCallback={this.setSelectedMenu}
         />
         <main className={classes.content}>
           <ContentProvider

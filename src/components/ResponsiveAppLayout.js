@@ -4,15 +4,9 @@ import { Hidden, withStyles } from "@material-ui/core";
 import HybridDrawer from "./HybridDrawer";
 import Header from "./Header";
 import layoutTypesEnum from "../constants/layoutTypes";
+import DrawerMenu from "../components/DrawerMenu";
 
 class Layout extends React.Component {
-  // componentWillMount() {
-  //   this.props.changeLayoutTypeCallback(this.props.layoutType);
-  // }
-
-  // componentWillUpdate() {
-  //   this.props.changeLayoutTypeCallback(this.props.layoutType);
-  // }
   render() {
     var { layoutType, menuState, menuToggleCallback, menuItems } = this.props;
 
@@ -38,8 +32,7 @@ Layout.propTypes = {
   menuState: PropTypes.bool.isRequired,
   menuToggleCallback: PropTypes.func.isRequired,
   layoutType: PropTypes.string.isRequired,
-  menuItems: PropTypes.node.isRequired,
-  changeLayoutTypeCallback: PropTypes.func.isRequired
+  menuItems: PropTypes.node.isRequired
 };
 
 class ResponsiveAppLayout extends Component {
@@ -50,10 +43,8 @@ class ResponsiveAppLayout extends Component {
   };
 
   handleMenuToggle = layoutType => {
-    console.log(layoutType);
-
     switch (layoutType) {
-      case layoutType.small:
+      case layoutTypesEnum.small:
         this.setState({
           smallScreenMenuState: !this.state.smallScreenMenuState
         });
@@ -73,8 +64,27 @@ class ResponsiveAppLayout extends Component {
     }
   };
 
+  getDrawerMenu = items => {
+    return (
+      <DrawerMenu
+        items={items}
+        setSelectedCallback={this.setSelectedMenu}
+        selectedItem={this.props.selectedMenu}
+      />
+    );
+  };
+
+  setSelectedMenu = tag => {
+    if (this.state.smallScreenMenuState) {
+      this.setState({ smallScreenMenuState: !this.state.smallScreenMenuState });
+    } // close drawer when menu was chose while layout was in small (sm) type
+    
+    this.props.selectedMenuCallback(tag);
+  };
+
   render() {
-    const { menuItems, changeLayoutTypeCallback } = this.props;
+    const { menuArray } = this.props;
+    var drawerMenu = this.getDrawerMenu(menuArray);
 
     return (
       <React.Fragment>
@@ -83,8 +93,7 @@ class ResponsiveAppLayout extends Component {
             layoutType={layoutTypesEnum.small}
             menuState={this.state.smallScreenMenuState}
             menuToggleCallback={this.handleMenuToggle}
-            menuItems={menuItems}
-            changeLayoutTypeCallback={changeLayoutTypeCallback}
+            menuItems={drawerMenu}
           />
         </Hidden>
         <Hidden only={["xs", "lg", "xl"]} implementation="css">
@@ -92,8 +101,7 @@ class ResponsiveAppLayout extends Component {
             layoutType={layoutTypesEnum.medium}
             menuState={this.state.middleScreenMenuState}
             menuToggleCallback={this.handleMenuToggle}
-            menuItems={menuItems}
-            changeLayoutTypeCallback={changeLayoutTypeCallback}
+            menuItems={drawerMenu}
           />
         </Hidden>
         <Hidden mdDown implementation="css">
@@ -101,8 +109,7 @@ class ResponsiveAppLayout extends Component {
             layoutType={layoutTypesEnum.large}
             menuState={this.state.largeScreenMenuState}
             menuToggleCallback={this.handleMenuToggle}
-            menuItems={menuItems}
-            changeLayoutTypeCallback={changeLayoutTypeCallback}
+            menuItems={drawerMenu}
           />
         </Hidden>
       </React.Fragment>
@@ -111,8 +118,16 @@ class ResponsiveAppLayout extends Component {
 }
 
 ResponsiveAppLayout.propTypes = {
-  menuItems: PropTypes.node.isRequired,
-  changeLayoutTypeCallback: PropTypes.func.isRequired
+  changeLayoutTypeCallback: PropTypes.func.isRequired,
+  menuArray: PropTypes.arrayOf(
+    PropTypes.shape({
+      tag: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      icon: PropTypes.string.isRequired
+    })
+  ),
+  selectedMenu: PropTypes.string.isRequired,
+  selectedMenuCallback: PropTypes.func.isRequired
 };
 
 export default ResponsiveAppLayout;
