@@ -77,10 +77,11 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
+    this.handleResize();
     window.addEventListener(
       "resize",
-      debounce(200, false, this.handleResize),
-      true
+      debounce(100, false, this.handleResize),
+      false
     );
   }
 
