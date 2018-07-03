@@ -1,0 +1,12 @@
+.ReactTable .-pagination .-btn{
+   
+}
+
+.ReactTable .-pagination .-btn:not([disabled]):hover {
+	background: rgba(0, 0, 0, 0.3);
+	color: #fff
+}
+
+.ReactTable .-pagination .-next {
+    text-align: right;
+}
