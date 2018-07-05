@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Hidden, withStyles } from "@material-ui/core";
+import Hidden from "@material-ui/core/Hidden";
+import { withStyles } from "@material-ui/core/styles";
 import HybridDrawer from "./HybridDrawer";
 import Header from "./Header";
 import layoutTypesEnum from "../constants/layoutTypes";
@@ -78,7 +79,7 @@ class ResponsiveAppLayout extends Component {
     if (this.state.smallScreenMenuState) {
       this.setState({ smallScreenMenuState: !this.state.smallScreenMenuState });
     } // close drawer when menu was chose while layout was in small (sm) type
-    
+
     this.props.selectedMenuCallback(tag);
   };
 

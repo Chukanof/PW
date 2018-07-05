@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Hidden, Drawer, IconButton, Divider, List } from "@material-ui/core";
+import Drawer from "@material-ui/core/Drawer";
+import IconButton from "@material-ui/core/IconButton";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Snackbar } from "@material-ui/core";
+import Snackbar from "@material-ui/core/Snackbar";
 
 class CountdownSnackbar extends Component {
   constructor(props) {
