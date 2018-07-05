@@ -26,14 +26,6 @@ const config = {
               loader: "css-loader"
             },
             {
-              loader: "postcss-loader",
-              options: {
-                config: {
-                  path: commonPaths.srcRoot + "/postcss.config.js"
-                }
-              }
-            },
-            {
               loader: "sass-loader"
             }
           ]
@@ -53,19 +45,38 @@ const config = {
       root: commonPaths.srcRoot
     }),
     new ExtractTextWebpackPlugin("[name].[hash].css"),
-    //  new webpack.optimize.CommonsChunkPlugin({
-    //    filename: "common.js",
-    //    minChunks: 3,
-    //    name: "common"
-    //  }),
+
     new HtmlWebPackPlugin({
       template: commonPaths.template,
       favicon: commonPaths.favicon,
       inject: true
     })
-  ]
-  // performance: { hints: false },
-  // optimization: { splitChunks: { chunks: "all" } }
+  ],
+  optimization: {
+    // minimize: false,
+    runtimeChunk: { name: "common" },
+    splitChunks: {
+      chunks: "async",
+      minSize: 30000,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: "~",
+      name: true,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  },
+  performance: { hints: false }
 };
 
 module.exports = config;
