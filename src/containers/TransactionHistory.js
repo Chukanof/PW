@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Chance from "chance";
+// import Chance from "chance";
 
 import ReactTable from "react-table";
 // used custom styles from src/styles/components/reactTable.scss
 // import "react-table/react-table.css";
 
-import { withStyles, Paper } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
 import layoutTypesEnum from "../constants/layoutTypes";
 
 import testData from "../data/testData";
@@ -22,7 +23,7 @@ function getData() {
     // using chancejs to generate guid
     // shortid is probably better but seems to have performance issues
     // on codesandbox.io
-    const _id = chance.guid();
+    // const _id = chance.guid();
     return {
       _id,
       ...item
@@ -74,12 +75,9 @@ function getSubComponentTemplate(layoutType) {
   return layoutType != layoutTypesEnum.small
     ? null
     : row => {
-        // a SubComponent just for the final detail
         const columns = [
           {
-            // Header: "Property",
             accessor: "property",
-            // width: 200,
             Cell: ci => {
               return `${ci.value}:`;
             },
@@ -87,11 +85,18 @@ function getSubComponentTemplate(layoutType) {
               backgroundColor: "#DDD",
               textAlign: "right",
               fontWeight: "bold"
+            },
+            headerStyle: {
+              // fix of small padding in header
+              // should be defined in all columns headers style
+              padding: "0px"
             }
           },
           {
-            //  Header: "Value",
-            accessor: "value"
+            accessor: "value",
+            headerStyle: {
+              padding: "0px"
+            }
           }
         ];
         const rowData = Object.keys(row.original).map(key => {
@@ -141,6 +146,11 @@ class TransactionHistory extends React.Component {
           columns={cols}
           SubComponent={sub}
           defaultPageSize={10}
+          filterable={true}
+          showFilters={true}
+          sortable={false}
+          pages={-1}
+          // PaginationComponent={() => <div>hello</div>}
           className="-highlight"
         />
       </Paper>
