@@ -1,5 +1,7 @@
+//#region imports
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import isEmailValidator from "validator/lib/isEmail";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -12,7 +14,8 @@ import Autosuggest from "react-autosuggest";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import classNames from "classnames";
-import transactions from "../reducers/homeReducer";
+import { getEmailsMatchedBySubstring } from "../actions";
+//#endregion
 
 const styles = theme => ({
   root: {
@@ -115,6 +118,7 @@ function renderInput(inputProps) {
   return (
     <TextField
       fullWidth
+      label={other.label}
       InputProps={{
         inputRef: ref,
         classes: {
@@ -182,12 +186,85 @@ function getSuggestions(value) {
         return keep;
       });
 }
+class RecipientFinder extends Component {
+  static propTypes = {
+    value: PropTypes.string.isRequired,
+    // suggestions: PropTypes.array.isRequired,
+    isNextButtonVisible: PropTypes.bool.isRequired
+  };
 
+  render() {
+    const { isNextButtonVisible, classes, value } = this.props;
+
+    return (
+      <React.Fragment>
+        <Autosuggest
+          theme={{
+            container: classes.container,
+            suggestionsContainerOpen: classes.suggestionsContainerOpen,
+            suggestionsList: classes.suggestionsList,
+            suggestion: classes.suggestion
+          }}
+          renderInputComponent={renderInput}
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+          renderSuggestionsContainer={renderSuggestionsContainer}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestion={renderSuggestion}
+          inputProps={{
+            classes,
+            label: "Find recipient by email",
+            placeholder: "email",
+            value: value,
+            onChange: this.handleChange
+          }}
+        />
+
+        {isNextButtonVisible && (
+          <Button
+            variant="contained"
+            size="medium"
+            color="primary"
+            className={classes.nextButton}
+          >
+            NEXT
+            <Icon>navigate_next</Icon>
+          </Button>
+        )}
+      </React.Fragment>
+    );
+  }
+}
+class TransactionForm extends Component {
+  static propTypes = {};
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <React.Fragment>
+        <TextField className={classes.container} />
+        {
+          <Button
+            variant="contained"
+            size="medium"
+            color="primary"
+            className={classes.nextButton}
+          >
+            SEND
+            <Icon>send</Icon>
+          </Button>
+        }
+      </React.Fragment>
+    );
+  }
+}
 class NewTransaction extends Component {
   state = {
     value: "",
     suggestions: [],
-    isNextButtonVisible: false
+    isNextButtonVisible: true,
+    isFinding: true
   };
 
   handleSuggestionsFetchRequested = ({ value }) => {
@@ -211,9 +288,12 @@ class NewTransaction extends Component {
     this.setState({ isNextButtonVisible: isEmail });
   };
 
+  onClickHandler = e => {
+    this.props.getEmailsMatchedBySubstring("");
+  };
   render() {
     const { classes } = this.props;
-    const { value, suggestions, isNextButtonVisible } = this.state;
+    const { value, suggestions, isNextButtonVisible, isFinding } = this.state;
 
     return (
       <Paper className={classNames(classes.root, classes.padding)}>
@@ -224,75 +304,52 @@ class NewTransaction extends Component {
         <br />
         <br />
         <div className={classes.content}>
-          <Autosuggest
-            // className={classes.margins}
-            theme={{
-              container: classes.container,
-              suggestionsContainerOpen: classes.suggestionsContainerOpen,
-              suggestionsList: classes.suggestionsList,
-              suggestion: classes.suggestion
-            }}
-            renderInputComponent={renderInput}
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-            onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-            renderSuggestionsContainer={renderSuggestionsContainer}
-            getSuggestionValue={getSuggestionValue}
-            renderSuggestion={renderSuggestion}
-            inputProps={{
-              classes,
-              placeholder: "Find recipient by email",
-              value: value,
-              onChange: this.handleChange
-            }}
-          />
+          {isFinding && (
+            <React.Fragment>
+              <Autosuggest
+                theme={{
+                  container: classes.container,
+                  suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                  suggestionsList: classes.suggestionsList,
+                  suggestion: classes.suggestion
+                }}
+                renderInputComponent={renderInput}
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={
+                  this.handleSuggestionsFetchRequested
+                }
+                onSuggestionsClearRequested={
+                  this.handleSuggestionsClearRequested
+                }
+                renderSuggestionsContainer={renderSuggestionsContainer}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={{
+                  classes,
+                  label: "Find recipient by email",
+                  placeholder: "email",
+                  value: value,
+                  onChange: this.handleChange
+                }}
+              />
 
-          {isNextButtonVisible && (
-            <Button
-              variant="contained"
-              size="medium"
-              color="primary"
-              className={classes.nextButton}
-            >
-              SEND
-              <Icon>navigate_next</Icon>
-            </Button>
+              {isNextButtonVisible && (
+                <Button
+                  variant="contained"
+                  size="medium"
+                  color="primary"
+                  className={classes.nextButton}
+                  onClick={this.onClickHandler}
+                >
+                  NEXT
+                  <Icon>navigate_next</Icon>
+                </Button>
+              )}
+            </React.Fragment>
           )}
+          {!isFinding && <TransactionForm classes={classes} />}
         </div>
       </Paper>
-      // <Card className={classes.verticalStretching}>
-      //   <CardHeader title="Choose a recipient of transaction" />
-      //   <CardContent>
-      //     <Autosuggest
-      //       // className={classes.margins}
-      //       theme={{
-      //         container: classes.container,
-      //         suggestionsContainerOpen: classes.suggestionsContainerOpen,
-      //         suggestionsList: classes.suggestionsList,
-      //         suggestion: classes.suggestion
-      //       }}
-      //       renderInputComponent={renderInput}
-      //       suggestions={suggestions}
-      //       onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-      //       onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-      //       renderSuggestionsContainer={renderSuggestionsContainer}
-      //       getSuggestionValue={getSuggestionValue}
-      //       renderSuggestion={renderSuggestion}
-      //       inputProps={{
-      //         classes,
-      //         placeholder: "Search a country (start with a)",
-      //         value: value,
-      //         onChange: this.handleChange
-      //       }}
-      //     />
-      //     <CardActions>
-      //       <Button variant="contained" size="medium" color="primary">
-      //         SEND
-      //         <Icon>navigate_next</Icon>
-      //       </Button>
-      //     </CardActions>
-      //   </CardContent>
-      // </Card>
     );
   }
 }
@@ -303,6 +360,7 @@ function mapStateToProps(state) {
     transactionSum: state.newTransaction.transactionSum
   };
 }
-export default connect(mapStateToProps)(
-  withStyles(styles, { withTheme: true })(NewTransaction)
-);
+export default connect(
+  mapStateToProps,
+  { getEmailsMatchedBySubstring }
+)(withStyles(styles, { withTheme: true })(NewTransaction));
