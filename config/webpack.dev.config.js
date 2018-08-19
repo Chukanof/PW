@@ -18,7 +18,10 @@ const config = {
   plugins: [
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-      "process.env.DEBUG": JSON.stringify(process.env.DEBUG)
+      "process.env.DEBUG": JSON.stringify(process.env.DEBUG),
+      "process.env.epb_domain": JSON.stringify(process.env.epb_domain),
+      "process.env.epb_protocol": JSON.stringify(process.env.epb_protocol),
+      "process.env.epb_port": JSON.stringify(process.env.epb_port)
     })
   ]
 };

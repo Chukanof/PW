@@ -1,3 +1,4 @@
+//#region imports
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
@@ -8,6 +9,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import Typography from "@material-ui/core/Typography";
+//#endregion
 
 const drawerWidth = 240;
 

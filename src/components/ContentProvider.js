@@ -4,15 +4,15 @@ import { withStyles } from "@material-ui/core/styles";
 
 import NewTransaction from "../containers/NewTransaction";
 import TransactionHistory from "../containers/TransactionHistory";
-import TestTable from "../containers/TestTable";
 
-const styles = theme => ({});
+const styles = theme => ({
+  padding: "16px"
+});
 
 class ContentProvider extends Component {
   components = {
     trNew: NewTransaction,
-    trHistory: TransactionHistory,
-    testTable: TestTable
+    trHistory: TransactionHistory
   };
 
   render() {
@@ -26,4 +26,4 @@ ContentProvider.propTypes = {
   layoutType: PropTypes.string.isRequired
 };
 
-export default ContentProvider;
+export default withStyles(styles)(ContentProvider);

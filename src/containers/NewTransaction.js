@@ -14,7 +14,10 @@ import Autosuggest from "react-autosuggest";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
 import classNames from "classnames";
+import { Field, reduxForm } from "redux-form";
+
 import { getEmailsMatchedBySubstring } from "../actions";
+import { debounce } from "throttle-debounce";
 //#endregion
 
 const styles = theme => ({
@@ -260,17 +263,35 @@ class TransactionForm extends Component {
   }
 }
 class NewTransaction extends Component {
-  state = {
-    value: "",
-    suggestions: [],
-    isNextButtonVisible: true,
-    isFinding: true
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: "",
+      suggestions: [],
+      isNextButtonVisible: true,
+      isFinding: true
+    };
+
+    // this.debouncedLoadSuggestions = debounce(1000, false, value => {
+    //   console.log("load");
+    //   console.log(value);
+    // });
+  }
+
+  debouncedLoadSuggestions = debounce(1000, false, value => {
+    console.log("load");
+    console.log(value);
+    this.props.getEmailsMatchedBySubstring(value);
+  });
 
   handleSuggestionsFetchRequested = ({ value }) => {
+    this.debouncedLoadSuggestions(value);
     this.setState({
       suggestions: getSuggestions(value)
     });
+    setTimeout(() => {
+      console.log(this.props.emailSuggestions);
+    }, 1500);
   };
 
   handleSuggestionsClearRequested = () => {
@@ -280,19 +301,26 @@ class NewTransaction extends Component {
   };
 
   handleChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue
-    });
+    console.log("handle change");
+    this.setState({ value: newValue });
+  };
+  handleSuggestionSelected = (
+    e,
+    { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }
+  ) => {
+    console.log(e);
+    console.log(suggestion);
+    console.log(suggestionValue);
+    console.log(method);
 
     var isEmail = isEmailValidator(newValue);
     this.setState({ isNextButtonVisible: isEmail });
   };
-
   onClickHandler = e => {
-    this.props.getEmailsMatchedBySubstring("");
+    this.props.getEmailsMatchedBySubstring(this.state.value);
   };
   render() {
-    const { classes } = this.props;
+    const { classes, recipientEmail, emailSuggestions } = this.props;
     const { value, suggestions, isNextButtonVisible, isFinding } = this.state;
 
     return (
@@ -306,6 +334,7 @@ class NewTransaction extends Component {
         <div className={classes.content}>
           {isFinding && (
             <React.Fragment>
+              {/*add redux-form there*/}
               <Autosuggest
                 theme={{
                   container: classes.container,
@@ -314,13 +343,14 @@ class NewTransaction extends Component {
                   suggestion: classes.suggestion
                 }}
                 renderInputComponent={renderInput}
-                suggestions={suggestions}
+                suggestions={emailSuggestions}
                 onSuggestionsFetchRequested={
                   this.handleSuggestionsFetchRequested
                 }
                 onSuggestionsClearRequested={
                   this.handleSuggestionsClearRequested
                 }
+                onSuggestionSelected={this.handleSuggestionSelected}
                 renderSuggestionsContainer={renderSuggestionsContainer}
                 getSuggestionValue={getSuggestionValue}
                 renderSuggestion={renderSuggestion}
@@ -332,7 +362,6 @@ class NewTransaction extends Component {
                   onChange: this.handleChange
                 }}
               />
-
               {isNextButtonVisible && (
                 <Button
                   variant="contained"
@@ -357,6 +386,7 @@ class NewTransaction extends Component {
 function mapStateToProps(state) {
   return {
     recipientEmail: state.newTransaction.recipientEmail,
+    emailSuggestions: state.newTransaction.emailSuggestions,
     transactionSum: state.newTransaction.transactionSum
   };
 }

@@ -1,3 +1,4 @@
+//#region imports
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 // import Chance from "chance";
@@ -11,6 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import layoutTypesEnum from "../constants/layoutTypes";
 
 import testData from "../data/testData";
+//#endregion
 
 const styles = themes => ({
   root: {
@@ -25,7 +27,7 @@ function getData() {
     // on codesandbox.io
     // const _id = chance.guid();
     return {
-      _id,
+      // _id,
       ...item
     };
   });

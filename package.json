@@ -4,7 +4,7 @@
   "description": "react fronend for PW",
   "scripts": {
     "build": "webpack",
-    "build:dev": "npm run build -- --env.env=dev",
+    "build:dev": "npm run build -- --env.env=dev --env.epb_protocol=http --env.epb_port=34420",
     "build:dev:watch": "npm run build:dev -- --watch",
     "build:dev:bundleanalyze": "npm run build:dev -- --env.addons=bundleanalyze",
     "serve:dev": "webpack-dev-server --env.env=dev ",
@@ -24,6 +24,7 @@
   "license": "ISC",
   "devDependencies": {
     "live-server": "^1.2.0",
+    "lowdb": "^1.0.0",
     "redux-devtools": "^3.4.1",
     "redux-devtools-dock-monitor": "^1.1.3",
     "redux-devtools-extension": "^2.13.2",
@@ -73,6 +74,7 @@
     "react-table": "^6.8.6",
     "redux": "^4.0.0",
     "redux-api-middleware": "^2.3.0",
+    "redux-form": "^7.4.2",
     "redux-promise-middleware": "^5.1.1",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.0.3",

@@ -1,10 +1,10 @@
 import { RSAA } from "redux-api-middleware";
 import fake from "./fakeApiName";
+import fakeResponseProvider from "../../fake/responses";
 
 const fakeApi = store => next => action => {
-  console.log("fake api start");
   const callAPI = action[RSAA];
-  //   console.log(callAPI);
+
   if (typeof callAPI === "undefined") {
     return next(action);
   }
@@ -12,9 +12,11 @@ const fakeApi = store => next => action => {
     return next(action);
   }
 
-  console.log("hello fake");
-  console.log(action);
-  next({ type: callAPI.types[1], payload: "new email" });
+  var successAction = callAPI.types[1];
+
+  const response = fakeResponseProvider(successAction, callAPI[fake]);
+
+  next({ type: successAction, payload: response });
 };
 
 export default fakeApi;

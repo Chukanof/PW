@@ -1,3 +1,4 @@
+//#region imports
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Provider } from "react-redux";
@@ -12,6 +13,8 @@ import MobileDetect from "mobile-detect";
 import Home from "./Home";
 import NotFound from "../components/404_NotFound";
 import CountdownSnackbar from "../components/CountdownSnackbar";
+import fakedb from "../fake/db";
+//#endregion
 
 const isBrowserExtension = isReduxDevToolsBrowserExtensionExists();
 const md = new MobileDetect(window.navigator.userAgent);

@@ -1,3 +1,4 @@
+//#region imports
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Drawer from "@material-ui/core/Drawer";
@@ -9,6 +10,7 @@ import classNames from "classnames";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import layoutTypesEnum from "../constants/layoutTypes";
+//#endregion
 
 const drawerWidth = 240;
 

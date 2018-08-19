@@ -2,25 +2,25 @@
 // import { CALL_API, Schemas } from "../middleware/api";
 import { RSAA } from "redux-api-middleware";
 import fake from "../middleware/fakeApi/fakeApiName";
+import EndpointBuilder from "../utils/reduxApiFeatures/endpointBuilder";
+import CaaGen from "../utils/reduxApiFeatures/callApiActionsGenerator";
 
-import {
-  EMAILMATCH_REQUEST,
-  EMAILMATCH_SUCCESS,
-  EMAILMATCH_FAILURE
-} from "../constants/actions";
+import { API_EMAILMATCH } from "../constants/actions";
 
 //#endregion
+const epb = new EndpointBuilder();
+const caaGen = new CaaGen();
 
 // Fetches a single user from Github API.
 // Relies on the custom API middleware defined in ../middleware/api.js.
 const fetchEmailsMatchedBySubstring = substring => ({
   [RSAA]: {
-    endpoint: `users/`,
+    endpoint: `${epb.getEndpoint("users")}`,
     method: "GET",
-    types: [EMAILMATCH_REQUEST, EMAILMATCH_SUCCESS, EMAILMATCH_FAILURE],
+    types: caaGen.getFullArray(API_EMAILMATCH),
 
     // schema: Schemas.USER,
-    [fake]: {}
+    [fake]: { substring }
   }
 });
 

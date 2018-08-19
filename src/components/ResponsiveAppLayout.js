@@ -1,3 +1,4 @@
+//#region imports
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Hidden from "@material-ui/core/Hidden";
@@ -6,6 +7,7 @@ import HybridDrawer from "./HybridDrawer";
 import Header from "./Header";
 import layoutTypesEnum from "../constants/layoutTypes";
 import DrawerMenu from "../components/DrawerMenu";
+//#endregion
 
 class Layout extends React.Component {
   render() {

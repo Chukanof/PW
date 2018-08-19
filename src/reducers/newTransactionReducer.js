@@ -1,7 +1,9 @@
-import { EMAILMATCH_SUCCESS } from "../constants/actions";
+import { API_EMAILMATCH } from "../constants/actions";
+import caaGen from "../utils/reduxApiFeatures/callApiActionsGenerator";
 
 const initialNewTransactionState = {
   recipientEmail: "",
+  emailSuggestions: [],
   transactionSum: 0
 };
 
@@ -10,11 +12,12 @@ export default function transactions(
   action
 ) {
   switch (action.type) {
-    case EMAILMATCH_SUCCESS:
-      return {
-        ...state,
-        recipientEmail: action.payload
-      };
+    case new caaGen().getSuccessAction(API_EMAILMATCH):
+
+    // return {
+    //   ...state,
+    //   emailSuggestions: action.payload
+    // };
     default:
       return state;
   }

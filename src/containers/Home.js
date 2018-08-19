@@ -1,22 +1,19 @@
+//#region imports
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Icon, Typography } from "@material-ui/core";
 
-import HybridDrawer from "../components/HybridDrawer";
-import DrawerMenu from "../components/DrawerMenu";
-import Header from "../components/Header";
 import ContentProvider from "../components/ContentProvider";
 import ResponsiveAppLayout from "../components/ResponsiveAppLayout";
 import layoutTypesEnum from "../constants/layoutTypes";
 
 import { debounce } from "throttle-debounce";
+//#endregion
 
 const menuItems = [
   { tag: "trHistory", title: "History", icon: "grid_on" },
-  { tag: "trNew", title: "Send", icon: "send" },
-  { tag: "testTable", title: "History", icon: "table_chart" }
+  { tag: "trNew", title: "Send", icon: "send" }
 ];
 
 const styles = theme => ({
@@ -46,12 +43,15 @@ const styles = theme => ({
     },
     minHeight: "100%",
     height: "100%" // 1
+  },
+  padding: {
+    padding: "16px"
   }
 });
 
 class Home extends React.Component {
   state = {
-    selectedMenu: "trHistory",
+    selectedMenu: "trNew",
     layoutType: ""
   };
 
